@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Un detalle especial para ti 💛</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: #fdfbf7;
+      font-family: 'Georgia', serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+      color: #333;
+    }
+    #container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      max-width: 900px;
+      max-height: 700px;
+    }
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    #startBtn {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 16px 36px;
+      font-size: 1.25rem;
+      background: linear-gradient(135deg, #fbc02d, #f57f17);
+      color: #2c1b00;
+      font-weight: bold;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 4px 18px rgba(245, 127, 23, 0.4);
+      transition: all 0.3s ease;
+      z-index: 10;
+      font-family: inherit;
+    }
+    #startBtn:hover {
+      transform: translate(-50%, -50%) scale(1.05);
+      box-shadow: 0 6px 22px rgba(245, 127, 23, 0.6);
+    }
+    .text-box {
+      position: absolute;
+      top: 12%;
+      left: 5%;
+      width: 42%;
+      opacity: 0;
+      transition: opacity 2s ease-in-out;
+      pointer-events: none;
+      z-index: 5;
+    }
+    .text-box.visible {
+      opacity: 1;
+    }
+    .text-box h2 {
+      font-size: 1.25rem;
+      color: #b71c1c;
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+    }
+    .text-box p {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: #444;
+      margin-bottom: 10px;
+    }
+    .typed-text {
+      position: absolute;
+      bottom: 10%;
+      left: 5%;
+      width: 90%;
+      font-family: 'Brush Script MT', 'Comic Sans MS', cursive, serif;
+      font-size: 1.6rem;
+      color: #c62828;
+      white-space: nowrap;
+      overflow: hidden;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="container">
+    <button id="startBtn">Toca aquí 💛</button>
+    <canvas id="canvas"></canvas>
+
+    <div class="text-box" id="letterText">
+      <h2>PARA LA MUJER MÁS INCREÍBLE</h2>
+      <p>Cada tulipán amarillo en este árbol florece para recordar lo afortunado que me siento de tenerte en mi vida.</p>
+      <p>Gracias por tu fortaleza, tu ternura, tu elegancia y por la gran mujer que eres día a día. Haces que todo sea infinitamente más bonito.</p>
+      <p style="font-weight: bold; color: #b71c1c;">- ¡TE AMO CON TODO MI CORAZÓN!</p>
+    </div>
+
+    <div class="typed-text" id="typedPhrase"></div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const startBtn = document.getElementById('startBtn');
+    const letterText = document.getElementById('letterText');
+    const typedPhrase = document.getElementById('typedPhrase');
+
+    function resizeCanvas() {
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    let heartTulips = [];
+    const totalTulips = 320;
+    let tulipIndex = 0;
+    const finalPhrase = "Eres el sol que hace florecer cada uno de mis días... ✨";
+
+    function getHeartPoint(t, scale, cx, cy) {
+      const x = 16 * Math.pow(Math.sin(t), 3);
+      const y = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+      return {
+        x: cx + x * scale,
+        y: cy + y * scale
+      };
+    }
+
+    function drawTulip(x, y, scale = 1, angle = 0, mainColor = "#ffeb3b", shadowColor = "#f57f17") {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(angle);
+      ctx.scale(scale, scale);
+
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(0, 4);
+      ctx.strokeStyle = '#4caf50';
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+
+      ctx.fillStyle = mainColor;
+      ctx.beginPath();
+      ctx.ellipse(-3, -6, 4, 7, Math.PI / 6, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.ellipse(3, -6, 4, 7, -Math.PI / 6, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.ellipse(0, -7, 4, 8, 0, 0, Math.PI * 2);
+      ctx.fillStyle = shadowColor;
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    function drawTreeBranch(startX, startY, len, angle, branchWidth) {
+      ctx.beginPath();
+      ctx.save();
+      ctx.strokeStyle = '#3e2723';
+      ctx.lineWidth = branchWidth;
+      ctx.lineCap = 'round';
+      ctx.translate(startX, startY);
+      ctx.rotate(angle * Math.PI / 180);
+      ctx.moveTo(0, 0);
+      ctx.lineTo(0, -len);
+      ctx.stroke();
+
+      if (len < 10) {
+        ctx.restore();
+        return;
+      }
+
+      drawTreeBranch(0, -len, len * 0.75, angle + 20, branchWidth * 0.7);
+      drawTreeBranch(0, -len, len * 0.75, angle - 20, branchWidth * 0.7);
+      ctx.restore();
+    }
+
+    function prepareHeartTulips() {
+      const cx = canvas.width * 0.70;
+      const cy = canvas.height * 0.35;
+      const scale = canvas.width < 600 ? 11 : 15;
+
+      const yellowPalette = [
+        { main: '#ffeb3b', shadow: '#fbc02d' },
+        { main: '#ffee58', shadow: '#f57f17' },
+        { main: '#ffea00', shadow: '#e65100' },
+        { main: '#fff176', shadow: '#fbc02d' },
+        { main: '#ffd54f', shadow: '#ff8f00' }
+      ];
+
+      for (let i = 0; i < totalTulips; i++) {
+        const t = Math.PI * 2 * Math.random();
+        const r = Math.sqrt(Math.random());
+        const pt = getHeartPoint(t, scale * r, cx, cy);
+
+        const colorScheme = yellowPalette[Math.floor(Math.random() * yellowPalette.length)];
+
+        heartTulips.push({
+          x: pt.x,
+          y: pt.y,
+          mainColor: colorScheme.main,
+          shadowColor: colorScheme.shadow,
+          scale: 0.75 + Math.random() * 0.45,
+          angle: (Math.random() - 0.5) * 0.4
+        });
+      }
+    }
+
+    function animateTulips() {
+      if (tulipIndex < heartTulips.length) {
+        for(let k = 0; k < 2 && tulipIndex < heartTulips.length; k++) {
+          const t = heartTulips[tulipIndex];
+          drawTulip(t.x, t.y, t.scale, t.angle, t.mainColor, t.shadowColor);
+          tulipIndex++;
+        }
+        requestAnimationFrame(animateTulips);
+      } else {
+        letterText.classList.add('visible');
+        setTimeout(startTulipWriting, 800);
+      }
+    }
+
+    function startTulipWriting() {
+      let charIndex = 0;
+
+      function typeNextChar() {
+        if (charIndex <= finalPhrase.length) {
+          typedPhrase.innerHTML = finalPhrase.substring(0, charIndex) + 
+            '<span style="display:inline-block; transform:translateY(-2px); margin-left:6px;">🌷🌷🌷</span>';
+          charIndex++;
+          setTimeout(typeNextChar, 65);
+        } else {
+          typedPhrase.innerHTML = finalPhrase;
+        }
+      }
+
+      typeNextChar();
+    }
+
+    startBtn.addEventListener('click', () => {
+      startBtn.style.display = 'none';
+
+      ctx.beginPath();
+      ctx.moveTo(0, canvas.height - 35);
+      ctx.lineTo(canvas.width, canvas.height - 35);
+      ctx.strokeStyle = '#388e3c';
+      ctx.lineWidth = 5;
+      ctx.stroke();
+
+      const trunkX = canvas.width * 0.70;
+      const trunkY = canvas.height - 35;
+      drawTreeBranch(trunkX, trunkY, 95, 0, 15);
+
+      prepareHeartTulips();
+      setTimeout(animateTulips, 500);
+    });
+  </script>
+</body>
+</html>
