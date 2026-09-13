@@ -64,7 +64,6 @@
       50% { transform: translate(-50%, -50%) scale(1.08); }
       100% { transform: translate(-50%, -50%) scale(1); }
     }
-    /* Carta Sorpresa con Stitch */
     #stitchModal {
       position: absolute;
       top: 50%;
@@ -131,40 +130,27 @@
     <button id="surpriseBtn" class="btn">Una sorpresa más 💛</button>
     <canvas id="canvas"></canvas>
 
-    <!-- Modal interactivo de Stitch -->
     <div id="stitchModal">
       <div class="stitch-card">
-        <!-- SVG Personalizado de Stitch Amarillo con Flores -->
         <svg class="stitch-svg" viewBox="0 0 200 200">
-          <!-- Oreja izquierda -->
           <path d="M 60 70 C 10 30, 5 90, 55 105 Z" fill="#fbc02d" stroke="#f57f17" stroke-width="3"/>
           <path d="M 55 75 C 20 45, 15 85, 50 98 Z" fill="#ffe082"/>
-          <!-- Oreja derecha -->
           <path d="M 140 70 C 190 30, 195 90, 145 105 Z" fill="#fbc02d" stroke="#f57f17" stroke-width="3"/>
           <path d="M 145 75 C 180 45, 185 85, 150 98 Z" fill="#ffe082"/>
-          <!-- Cabeza -->
           <ellipse cx="100" cy="95" rx="48" ry="38" fill="#ffeb3b" stroke="#f57f17" stroke-width="3"/>
-          <!-- Parches ojos -->
           <ellipse cx="80" cy="92" rx="14" ry="18" fill="#fff59d" transform="rotate(-10 80 92)"/>
           <ellipse cx="120" cy="92" rx="14" ry="18" fill="#fff59d" transform="rotate(10 120 92)"/>
-          <!-- Ojos -->
           <ellipse cx="82" cy="92" rx="7" ry="10" fill="#212121"/>
           <ellipse cx="118" cy="92" rx="7" ry="10" fill="#212121"/>
           <circle cx="84" cy="89" r="2.5" fill="#ffffff"/>
           <circle cx="120" cy="89" r="2.5" fill="#ffffff"/>
-          <!-- Nariz -->
           <path d="M 92 98 Q 100 93 108 98 Q 100 106 92 98 Z" fill="#e65100"/>
-          <!-- Boca sonriente -->
           <path d="M 82 112 Q 100 125 118 112" fill="none" stroke="#bf360c" stroke-width="3" stroke-linecap="round"/>
-          <!-- Cuerpo -->
           <path d="M 70 125 C 65 170, 135 170, 130 125 Z" fill="#ffeb3b" stroke="#f57f17" stroke-width="3"/>
-          <!-- Ramo de Tulipanes en brazos -->
           <path d="M 90 135 L 85 165 M 100 132 L 100 165 M 110 135 L 115 165" stroke="#4caf50" stroke-width="3"/>
-          <!-- Flores del ramo -->
           <path d="M 80 135 C 75 120, 95 120, 90 135 Z" fill="#ffee58" stroke="#f57f17"/>
           <path d="M 95 130 C 90 115, 110 115, 105 130 Z" fill="#fff176" stroke="#f57f17"/>
           <path d="M 105 135 C 100 120, 120 120, 115 135 Z" fill="#ffee58" stroke="#f57f17"/>
-          <!-- Patas Stitch -->
           <ellipse cx="75" cy="165" rx="12" ry="8" fill="#fbc02d"/>
           <ellipse cx="125" cy="165" rx="12" ry="8" fill="#fbc02d"/>
         </svg>
@@ -197,11 +183,11 @@
     let particles = [];
 
     const tulips = [
-      { x: 0.50, height: 0.48, curve: 0, delay: 0, scale: 1.1 },
-      { x: 0.38, height: 0.38, curve: -25, delay: 0.15, scale: 0.95 },
-      { x: 0.62, height: 0.40, curve: 25, delay: 0.25, scale: 0.95 },
-      { x: 0.44, height: 0.30, curve: -12, delay: 0.4, scale: 0.8 },
-      { x: 0.56, height: 0.32, curve: 12, delay: 0.5, scale: 0.8 }
+      { x: 0.50, height: 0.48, curve: 0, delay: 0, scale: 1.15 },
+      { x: 0.38, height: 0.38, curve: -25, delay: 0.15, scale: 1.0 },
+      { x: 0.62, height: 0.40, curve: 25, delay: 0.25, scale: 1.0 },
+      { x: 0.44, height: 0.30, curve: -12, delay: 0.4, scale: 0.85 },
+      { x: 0.56, height: 0.32, curve: 12, delay: 0.5, scale: 0.85 }
     ];
 
     function createParticles() {
@@ -296,51 +282,78 @@
       });
     }
 
-    function drawTulipFlower(x, y, scale, bloomProg) {
+    // Dibujo Erguido y Vertical del Tulipán en Copa
+    function drawUprightTulip(x, y, scale, bloomProg) {
       if (bloomProg <= 0) return;
 
       ctx.save();
       ctx.translate(x, y);
       ctx.scale(scale * bloomProg, scale * bloomProg);
 
-      let glow = ctx.createRadialGradient(0, -15, 5, 0, -15, 45);
+      // Resplandor cálido en torno a la flor
+      let glow = ctx.createRadialGradient(0, -30, 5, 0, -30, 50);
       glow.addColorStop(0, 'rgba(255, 235, 59, 0.8)');
-      glow.addColorStop(0.5, 'rgba(255, 179, 0, 0.3)');
+      glow.addColorStop(0.5, 'rgba(255, 179, 0, 0.35)');
       glow.addColorStop(1, 'rgba(0, 0, 0, 0)');
       ctx.fillStyle = glow;
       ctx.beginPath();
-      ctx.arc(0, -15, 50, 0, Math.PI * 2);
+      ctx.arc(0, -30, 55, 0, Math.PI * 2);
       ctx.fill();
 
+      // BASE / RECEPTÁCULO VERDE
       ctx.beginPath();
-      ctx.ellipse(0, -22, 12, 22, 0, 0, Math.PI * 2);
-      ctx.fillStyle = '#f57f17';
+      ctx.ellipse(0, 0, 6, 4, 0, 0, Math.PI * 2);
+      ctx.fillStyle = '#2e7d32';
       ctx.fill();
 
+      // PÉTALOS TRASEROS (Interior de la copa)
       ctx.beginPath();
-      ctx.ellipse(-9, -15, 11, 22, Math.PI / 10, 0, Math.PI * 2);
-      let gradIzq = ctx.createLinearGradient(-18, 0, 0, -30);
-      gradIzq.addColorStop(0, '#fbc02d');
-      gradIzq.addColorStop(1, '#fff59d');
-      ctx.fillStyle = gradIzq;
+      ctx.ellipse(0, -36, 14, 28, 0, 0, Math.PI * 2);
+      let gradBack = ctx.createLinearGradient(0, -10, 0, -64);
+      gradBack.addColorStop(0, '#e65100');
+      gradBack.addColorStop(0.5, '#f57f17');
+      gradBack.addColorStop(1, '#fbc02d');
+      ctx.fillStyle = gradBack;
       ctx.fill();
 
+      // PÉTALO IZQUIERDO (Abrazando erguido)
       ctx.beginPath();
-      ctx.ellipse(9, -15, 11, 22, -Math.PI / 10, 0, Math.PI * 2);
-      let gradDer = ctx.createLinearGradient(18, 0, 0, -30);
-      gradDer.addColorStop(0, '#fbc02d');
-      gradDer.addColorStop(1, '#fff59d');
-      ctx.fillStyle = gradDer;
+      ctx.moveTo(-2, -2);
+      ctx.bezierCurveTo(-26, -18, -28, -50, -8, -62);
+      ctx.bezierCurveTo(-2, -55, 0, -35, -2, -2);
+      let gradLeft = ctx.createLinearGradient(-25, 0, 0, -62);
+      gradLeft.addColorStop(0, '#f57f17');
+      gradLeft.addColorStop(0.4, '#fbc02d');
+      gradLeft.addColorStop(1, '#fff176');
+      ctx.fillStyle = gradLeft;
       ctx.fill();
 
+      // PÉTALO DERECHO (Abrazando erguido)
       ctx.beginPath();
-      ctx.ellipse(0, -12, 12, 22, 0, 0, Math.PI * 2);
-      let gradCen = ctx.createLinearGradient(0, 5, 0, -30);
-      gradCen.addColorStop(0, '#ffeb3b');
-      gradCen.addColorStop(0.8, '#fffde7');
-      ctx.fillStyle = gradCen;
+      ctx.moveTo(2, -2);
+      ctx.bezierCurveTo(26, -18, 28, -50, 8, -62);
+      ctx.bezierCurveTo(2, -55, 0, -35, 2, -2);
+      let gradRight = ctx.createLinearGradient(25, 0, 0, -62);
+      gradRight.addColorStop(0, '#f57f17');
+      gradRight.addColorStop(0.4, '#fbc02d');
+      gradRight.addColorStop(1, '#fff176');
+      ctx.fillStyle = gradRight;
+      ctx.fill();
+
+      // PÉTALO FRONTAL CENTRAL (Copa principal vertical)
+      ctx.beginPath();
+      ctx.moveTo(-16, -16);
+      ctx.bezierCurveTo(-22, -38, -12, -60, 0, -66);
+      ctx.bezierCurveTo(12, -60, 22, -38, 16, -16);
+      ctx.bezierCurveTo(10, -2, -10, -2, -16, -16);
+      let gradFront = ctx.createLinearGradient(0, -5, 0, -66);
+      gradFront.addColorStop(0, '#f57f17');
+      gradFront.addColorStop(0.3, '#ffeb3b');
+      gradFront.addColorStop(0.85, '#fffde7');
+      gradFront.addColorStop(1, '#ffffff');
+      ctx.fillStyle = gradFront;
       ctx.shadowColor = '#ffee58';
-      ctx.shadowBlur = 15;
+      ctx.shadowBlur = 12;
       ctx.fill();
 
       ctx.restore();
@@ -354,7 +367,6 @@
         if (progress < 1) {
           progress += 0.006;
         } else {
-          // Mostrar botón de sorpresa cuando termina de florecer
           surpriseBtn.style.display = 'block';
         }
 
@@ -392,7 +404,7 @@
             ctx.restore();
 
             let bloomProg = Math.max(0, (tProg - 0.7) / 0.3);
-            drawTulipFlower(targetX, targetY, t.scale, bloomProg);
+            drawUprightTulip(targetX, targetY, t.scale, bloomProg);
           }
         });
       }
